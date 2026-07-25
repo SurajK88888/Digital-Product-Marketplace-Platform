@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
@@ -19,9 +18,7 @@ const fontMono = JetBrains_Mono({
 
 // ── Metadata ─────────────────────────────────────────────────
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-  ),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
     default: "Digital Product Marketplace",
     template: "%s | Digital Product Marketplace",
@@ -50,8 +47,7 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_APP_URL,
     siteName: "Digital Product Marketplace",
     title: "Digital Product Marketplace",
-    description:
-      "The enterprise marketplace for premium digital products.",
+    description: "The enterprise marketplace for premium digital products.",
   },
   twitter: {
     card: "summary_large_image",

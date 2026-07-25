@@ -11,11 +11,11 @@ so Alembic can detect schema changes automatically.
 import asyncio
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from alembic import context
 from app.core.config import settings
 from app.database.base import Base
 
@@ -47,8 +47,8 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        compare_type=True,              # Detect column type changes
-        compare_server_default=True,    # Detect server default changes
+        compare_type=True,  # Detect column type changes
+        compare_server_default=True,  # Detect server default changes
     )
     with context.begin_transaction():
         context.run_migrations()

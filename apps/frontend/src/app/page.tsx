@@ -32,9 +32,9 @@ export default function HomePage() {
         </h1>
 
         <p className="text-lg text-muted-foreground">
-          Enterprise-grade digital product marketplace platform. The boilerplate
-          is fully initialized with Next.js 15, TypeScript, Tailwind CSS, Shadcn
-          UI, TanStack Query, Zustand, and Framer Motion.
+          Enterprise-grade digital product marketplace platform. The boilerplate is fully
+          initialized with Next.js 15, TypeScript, Tailwind CSS, Shadcn UI, TanStack Query, Zustand,
+          and Framer Motion.
         </p>
 
         <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">

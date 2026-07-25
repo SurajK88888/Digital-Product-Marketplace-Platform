@@ -53,24 +53,17 @@ export const useAuthStore = create<AuthState>()(
           set(
             { user, accessToken, isAuthenticated: true, isLoading: false },
             false,
-            "auth/setAuth"
+            "auth/setAuth",
           ),
 
-        setAccessToken: (accessToken: string) =>
-          set({ accessToken }, false, "auth/setAccessToken"),
+        setAccessToken: (accessToken: string) => set({ accessToken }, false, "auth/setAccessToken"),
 
-        setUser: (user: AuthUser) =>
-          set({ user }, false, "auth/setUser"),
+        setUser: (user: AuthUser) => set({ user }, false, "auth/setUser"),
 
         clearAuth: () =>
-          set(
-            { user: null, accessToken: null, isAuthenticated: false },
-            false,
-            "auth/clearAuth"
-          ),
+          set({ user: null, accessToken: null, isAuthenticated: false }, false, "auth/clearAuth"),
 
-        setLoading: (isLoading: boolean) =>
-          set({ isLoading }, false, "auth/setLoading"),
+        setLoading: (isLoading: boolean) => set({ isLoading }, false, "auth/setLoading"),
       }),
       {
         name: "auth-storage",
@@ -95,8 +88,8 @@ export const useAuthStore = create<AuthState>()(
             sessionStorage.removeItem(name);
           },
         },
-      }
+      },
     ),
-    { name: "AuthStore" }
-  )
+    { name: "AuthStore" },
+  ),
 );

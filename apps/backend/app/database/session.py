@@ -27,8 +27,8 @@ engine: AsyncEngine = create_async_engine(
     pool_size=settings.DB_POOL_SIZE,
     max_overflow=settings.DB_MAX_OVERFLOW,
     pool_timeout=settings.DB_POOL_TIMEOUT,
-    pool_pre_ping=True,     # Validate connections before use (handles stale connections)
-    pool_recycle=3600,      # Recycle connections after 1 hour
+    pool_pre_ping=True,  # Validate connections before use (handles stale connections)
+    pool_recycle=3600,  # Recycle connections after 1 hour
     # ── Debugging ─────────────────────────────────────────────
     echo=settings.DB_ECHO_SQL,
     echo_pool=False,

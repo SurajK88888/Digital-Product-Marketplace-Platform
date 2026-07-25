@@ -30,13 +30,9 @@ class CorrelationIdMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp) -> None:
         super().__init__(app)
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Reuse client-provided ID or generate a new one
-        correlation_id = request.headers.get(
-            CORRELATION_ID_HEADER, str(uuid.uuid4())
-        )
+        correlation_id = request.headers.get(CORRELATION_ID_HEADER, str(uuid.uuid4()))
 
         # Attach to request state for access in route handlers and loggers
         request.state.correlation_id = correlation_id

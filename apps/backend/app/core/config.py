@@ -14,7 +14,7 @@ Add new settings fields here; document them in .env.example.
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import AnyHttpUrl, PostgresDsn, RedisDsn, field_validator
+from pydantic import PostgresDsn, RedisDsn, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -39,17 +39,17 @@ class Settings(BaseSettings):
 
     # ── Database (PostgreSQL) ─────────────────────────────────
     DATABASE_URL: PostgresDsn
-    DB_POOL_SIZE: int = 10          # Connections per worker process
-    DB_MAX_OVERFLOW: int = 20       # Extra connections above pool size
-    DB_POOL_TIMEOUT: int = 30       # Seconds to wait for a free connection
-    DB_ECHO_SQL: bool = False       # Log raw SQL queries (dev only)
+    DB_POOL_SIZE: int = 10  # Connections per worker process
+    DB_MAX_OVERFLOW: int = 20  # Extra connections above pool size
+    DB_POOL_TIMEOUT: int = 30  # Seconds to wait for a free connection
+    DB_ECHO_SQL: bool = False  # Log raw SQL queries (dev only)
 
     # ── Redis ─────────────────────────────────────────────────
     REDIS_URL: RedisDsn = "redis://localhost:6379/0"  # type: ignore[assignment]
 
     # ── Security & JWT ────────────────────────────────────────
-    SECRET_KEY: str                 # Must be ≥64 chars in production
-    ALGORITHM: str = "HS256"        # JWT signing algorithm
+    SECRET_KEY: str  # Must be ≥64 chars in production
+    ALGORITHM: str = "HS256"  # JWT signing algorithm
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 

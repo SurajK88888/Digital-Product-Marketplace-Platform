@@ -9,12 +9,12 @@ It provides automatic created_at, updated_at, soft delete, and versioning
 columns on every table.
 """
 
-import uuid
 from datetime import UTC, datetime
+import uuid
 
-from sqlalchemy import DateTime, Integer, String, func
+from sqlalchemy import DateTime, Integer, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, MappedColumn, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -22,6 +22,7 @@ class Base(DeclarativeBase):
     SQLAlchemy Declarative Base.
     All ORM models must inherit from this class.
     """
+
     pass
 
 

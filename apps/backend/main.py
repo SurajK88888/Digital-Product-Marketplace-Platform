@@ -8,21 +8,21 @@ Reusable pattern: This bootstrap pattern can be copied to any FastAPI project.
 Add new routers under `app.include_router(...)`.
 """
 
-import uuid
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
+import uuid
 
-import sentry_sdk
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+import sentry_sdk
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from app.api.v1.router import api_v1_router
 from app.core.config import settings
-from app.core.logging import setup_logging, get_logger
+from app.core.logging import get_logger, setup_logging
 from app.database.session import engine
 
 logger = get_logger(__name__)
@@ -97,6 +97,7 @@ app = create_application()
 
 # ── Global Exception Handlers ─────────────────────────────────
 
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
     request: Request, exc: RequestValidationError
@@ -133,9 +134,7 @@ async def validation_exception_handler(
 
 
 @app.exception_handler(Exception)
-async def generic_exception_handler(
-    request: Request, exc: Exception
-) -> JSONResponse:
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Catch-all handler for unhandled server errors — prevents leaking stack traces."""
     trace_id = request.headers.get("X-Request-Id", str(uuid.uuid4()))
     logger.exception("Unhandled exception", exc_info=exc, trace_id=trace_id)

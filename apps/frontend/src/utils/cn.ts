@@ -21,11 +21,7 @@ export function cn(...inputs: ClassValue[]): string {
  * formatCurrency — Format monetary amounts consistently
  * @example formatCurrency(49.99, "USD") → "$49.99"
  */
-export function formatCurrency(
-  amount: number,
-  currency = "USD",
-  locale = "en-US"
-): string {
+export function formatCurrency(amount: number, currency = "USD", locale = "en-US"): string {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -44,7 +40,7 @@ export function formatDate(
     year: "numeric",
     month: "short",
     day: "numeric",
-  }
+  },
 ): string {
   return new Intl.DateTimeFormat("en-US", options).format(new Date(isoString));
 }

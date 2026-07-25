@@ -4,12 +4,10 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
-
 import { useAuthStore } from "@/store/auth.store";
 
 // ── Constants ─────────────────────────────────────────────────
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
 
 const REQUEST_TIMEOUT_MS = 15_000; // 15 seconds
 
@@ -81,7 +79,7 @@ apiClient.interceptors.request.use(
 
     return config;
   },
-  (error: AxiosError) => Promise.reject(error)
+  (error: AxiosError) => Promise.reject(error),
 );
 
 // ── Response Interceptor: Handle 401 & Token Refresh ──────────
@@ -112,7 +110,7 @@ apiClient.interceptors.response.use(
         const refreshResponse = await axios.post<{ data: { accessToken: string } }>(
           `${API_BASE_URL}/auth/refresh`,
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         const newAccessToken = refreshResponse.data.data.accessToken;
@@ -141,7 +139,7 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export { apiClient };

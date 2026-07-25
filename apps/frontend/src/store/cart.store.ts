@@ -52,22 +52,15 @@ export const useCartStore = create<CartState>()(
         isOpen: false,
 
         // ── Computed Values ────────────────────────────────────
-        totalItems: () =>
-          get().items.reduce((sum, item) => sum + item.quantity, 0),
+        totalItems: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
 
-        totalPrice: () =>
-          get().items.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          ),
+        totalPrice: () => get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
 
         // ── Actions ────────────────────────────────────────────
         addItem: (newItem: CartItem) =>
           set(
             (state) => {
-              const existing = state.items.find(
-                (i) => i.variantId === newItem.variantId
-              );
+              const existing = state.items.find((i) => i.variantId === newItem.variantId);
               if (existing) {
                 // For digital products, quantity is always 1 (one license per item)
                 return state;
@@ -75,7 +68,7 @@ export const useCartStore = create<CartState>()(
               return { items: [...state.items, { ...newItem, quantity: 1 }] };
             },
             false,
-            "cart/addItem"
+            "cart/addItem",
           ),
 
         removeItem: (variantId: string) =>
@@ -84,36 +77,32 @@ export const useCartStore = create<CartState>()(
               items: state.items.filter((i) => i.variantId !== variantId),
             }),
             false,
-            "cart/removeItem"
+            "cart/removeItem",
           ),
 
         updateQuantity: (variantId: string, quantity: number) =>
           set(
             (state) => ({
               items: state.items.map((i) =>
-                i.variantId === variantId
-                  ? { ...i, quantity: Math.max(1, quantity) }
-                  : i
+                i.variantId === variantId ? { ...i, quantity: Math.max(1, quantity) } : i,
               ),
             }),
             false,
-            "cart/updateQuantity"
+            "cart/updateQuantity",
           ),
 
         clearCart: () => set({ items: [] }, false, "cart/clearCart"),
 
-        toggleCart: () =>
-          set((state) => ({ isOpen: !state.isOpen }), false, "cart/toggle"),
+        toggleCart: () => set((state) => ({ isOpen: !state.isOpen }), false, "cart/toggle"),
 
-        setCartOpen: (open: boolean) =>
-          set({ isOpen: open }, false, "cart/setOpen"),
+        setCartOpen: (open: boolean) => set({ isOpen: open }, false, "cart/setOpen"),
       }),
       {
         name: "cart-storage",
         // Cart persists in localStorage (survives browser sessions)
         // Financial recalculation always happens server-side at checkout
-      }
+      },
     ),
-    { name: "CartStore" }
-  )
+    { name: "CartStore" },
+  ),
 );

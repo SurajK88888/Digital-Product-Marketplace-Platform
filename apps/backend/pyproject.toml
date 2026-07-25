@@ -34,6 +34,11 @@ ignore = [
     "ANN102", # Missing type annotation for cls
     "S101",   # Use of assert (allowed in tests)
     "B008",   # Do not perform function calls in default arguments (FastAPI Depends)
+    "N818",   # Custom exception names using *Exception suffix
+    "ANN401", # Allow typing.Any for logger and dynamic schemas
+    "S105",   # Allow TOKEN_TYPE string constants in security.py
+    "ARG001", # Allow unused arguments (e.g. app in FastAPI lifespan)
+    "S104",   # Allow binding to 0.0.0.0 in dev server run
 ]
 
 [tool.ruff.lint.per-file-ignores]

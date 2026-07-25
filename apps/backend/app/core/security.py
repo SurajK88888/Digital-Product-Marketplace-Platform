@@ -8,10 +8,10 @@ Reusable pattern: Import `create_access_token`, `verify_password`,
 and `hash_password` in any FastAPI auth module.
 """
 
-import secrets
-import uuid
 from datetime import UTC, datetime, timedelta
+import secrets
 from typing import Any
+import uuid
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext

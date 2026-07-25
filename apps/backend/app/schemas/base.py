@@ -40,9 +40,7 @@ class BaseSchema(BaseModel):
 class ResponseMeta(BaseModel):
     """Metadata block included in every API response."""
 
-    timestamp: str = Field(
-        default_factory=lambda: datetime.now(UTC).isoformat() + "Z"
-    )
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat() + "Z")
     version: str = "v1"
     request_id: str = Field(default_factory=lambda: str(uuid4()))
 

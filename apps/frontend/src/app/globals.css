@@ -112,7 +112,9 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
   /* ── Focus Styles ────────────────────────────────────────────── */
@@ -130,7 +132,7 @@
 
   /* Glass morphism card — reusable for premium UI cards */
   .glass-card {
-    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-xl;
+    @apply border border-white/20 bg-white/10 shadow-xl backdrop-blur-md;
   }
 }
 

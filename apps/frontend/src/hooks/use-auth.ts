@@ -2,15 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/store/auth.store";
-import type {
-  AuthTokenResponse,
-  LoginCredentials,
-  RegisterCredentials,
-  User,
-} from "@/types";
+import type { AuthTokenResponse, LoginCredentials, RegisterCredentials, User } from "@/types";
 
 /**
  * useAuth — Authentication Hook
@@ -22,15 +16,8 @@ import type {
  */
 export function useAuth() {
   const router = useRouter();
-  const {
-    user,
-    accessToken,
-    isAuthenticated,
-    isLoading,
-    setAuth,
-    clearAuth,
-    setLoading,
-  } = useAuthStore();
+  const { user, accessToken, isAuthenticated, isLoading, setAuth, clearAuth, setLoading } =
+    useAuthStore();
 
   // ── Login ──────────────────────────────────────────────────
   const login = useCallback(
@@ -39,7 +26,7 @@ export function useAuth() {
       try {
         const response = await apiClient.post<{ data: AuthTokenResponse }>(
           "/auth/login",
-          credentials
+          credentials,
         );
         const { accessToken: token, user: userData } = response.data.data;
         setAuth(userData, token);
@@ -48,7 +35,7 @@ export function useAuth() {
         setLoading(false);
       }
     },
-    [setAuth, setLoading, router]
+    [setAuth, setLoading, router],
   );
 
   // ── Register ───────────────────────────────────────────────
@@ -63,7 +50,7 @@ export function useAuth() {
         setLoading(false);
       }
     },
-    [setLoading, router]
+    [setLoading, router],
   );
 
   // ── Logout ─────────────────────────────────────────────────
