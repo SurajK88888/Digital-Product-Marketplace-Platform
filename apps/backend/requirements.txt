@@ -54,6 +54,10 @@ sentry-sdk[fastapi]==2.13.0   # Error tracking and performance monitoring
 opentelemetry-sdk==1.27.0     # OpenTelemetry tracing
 
 # =============================================================
-# Dev & Testing Dependencies
-# Install with: pip install -r requirements-dev.txt
+# Dev & Testing Dependencies (Included for CI pipelines)
 # =============================================================
+ruff==0.6.2                    # Extremely fast Python linter and formatter
+mypy==1.11.2                   # Static type checker
+pytest==8.3.2                  # Testing framework
+pytest-asyncio==0.23.8         # Async test runner for Pytest
+pytest-cov==5.0.0              # Coverage reporting for Pytest

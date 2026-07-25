@@ -1,5 +1,2 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Run lint-staged on pre-commit (lint + type-check only changed files)
+# Run lint-staged on pre-commit (format/lint changed files)
 npx lint-staged

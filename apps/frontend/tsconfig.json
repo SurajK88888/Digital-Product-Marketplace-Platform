@@ -4,13 +4,11 @@
     "target": "ES2022",
     "lib": ["dom", "dom.iterable", "ES2022"],
     "jsx": "preserve",
-
     /* ── Module Resolution ──────────────────────────────────── */
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowJs": true,
-
     /* ── Strict Type Safety ─────────────────────────────────── */
     "strict": true,
     "noImplicitAny": true,
@@ -24,17 +22,14 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "exactOptionalPropertyTypes": false,
-
     /* ── Emit ───────────────────────────────────────────────── */
     "noEmit": true,
     "incremental": true,
     "skipLibCheck": true,
-
     /* ── Interop ────────────────────────────────────────────── */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-
     /* ── Path Aliases ───────────────────────────────────────── */
     /* Reusable pattern: Add new aliases here; mirror in next.config.mjs if needed */
     "baseUrl": ".",
@@ -50,13 +45,13 @@
       "@/styles/*": ["./src/styles/*"],
       "@/config/*": ["./src/config/*"]
     },
-
     /* ── Plugin ─────────────────────────────────────────────── */
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "isolatedModules": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules", ".next", "out", "coverage"]
