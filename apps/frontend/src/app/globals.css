@@ -1,0 +1,151 @@
+/**
+ * globals.css — Design System Foundation
+ * ========================================
+ * All CSS custom properties are defined here.
+ * Tailwind utilities reference these variables via tailwind.config.ts.
+ * This file is the single source of truth for the visual design system.
+ *
+ * Reusable pattern: Copy :root and .dark blocks to any new project,
+ * adjusting HSL values to match the project's brand identity.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Layer: CSS Variables & Typography ─────────────────── */
+@layer base {
+  :root {
+    /* ── Light Theme ─────────────────────────────────────────── */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Brand / Primary: Deep Violet */
+    --primary: 252 90% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 252 90% 60%;
+
+    /* ── Brand Palette (Violet/Purple) ───────────────────────── */
+    --brand-50: 250 100% 97%;
+    --brand-100: 251 91% 94%;
+    --brand-500: 252 90% 60%;
+    --brand-600: 252 83% 53%;
+    --brand-700: 252 79% 45%;
+    --brand-900: 252 70% 28%;
+
+    /* ── Border Radius ───────────────────────────────────────── */
+    --radius: 0.625rem;
+
+    /* ── Fonts ───────────────────────────────────────────────── */
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  }
+
+  .dark {
+    /* ── Dark Theme ──────────────────────────────────────────── */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 252 90% 68%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 252 90% 68%;
+
+    /* ── Brand Palette Dark ───────────────────────────────────── */
+    --brand-50: 250 30% 12%;
+    --brand-100: 251 35% 18%;
+    --brand-500: 252 90% 68%;
+    --brand-600: 252 85% 62%;
+    --brand-700: 252 80% 55%;
+    --brand-900: 252 70% 85%;
+  }
+
+  /* ── Global Base Styles ─────────────────────────────────────── */
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* ── Focus Styles ────────────────────────────────────────────── */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* ── Components Layer ────────────────────────────────────────── */
+@layer components {
+  /* Skeleton shimmer loader — reusable pattern for loading states */
+  .skeleton {
+    @apply animate-pulse rounded-md bg-muted;
+  }
+
+  /* Glass morphism card — reusable for premium UI cards */
+  .glass-card {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-xl;
+  }
+}
+
+/* ── Utilities Layer ─────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hide scrollbar while preserving scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

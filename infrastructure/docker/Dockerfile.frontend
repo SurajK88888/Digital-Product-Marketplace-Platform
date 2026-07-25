@@ -1,0 +1,72 @@
+# =============================================================
+# Dockerfile.frontend — Multi-Stage Next.js Production Build
+# Reduces final image size by ~80% via Next.js standalone output
+# =============================================================
+
+# ── Stage 1: Dependency Installation ──────────────────────────
+FROM node:20-alpine AS deps
+LABEL stage="deps"
+
+# Install OS-level dependencies required by native npm packages
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy workspace manifest files for dependency resolution
+COPY package.json package-lock.json* ./
+COPY apps/frontend/package.json ./apps/frontend/
+
+# Install ALL dependencies (including devDeps needed for build)
+RUN npm ci --workspace=apps/frontend
+
+# ── Stage 2: Build Application ────────────────────────────────
+FROM node:20-alpine AS builder
+LABEL stage="builder"
+
+WORKDIR /app
+
+# Copy installed node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/frontend/node_modules ./apps/frontend/node_modules
+
+# Copy full source
+COPY . .
+
+# Set build-time environment variables
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+# Build Next.js with standalone output
+RUN npm run build:frontend
+
+# ── Stage 3: Production Runtime ────────────────────────────────
+FROM node:20-alpine AS runner
+LABEL stage="runner"
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Create non-root system user for security (never run as root)
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
+
+# Copy only the standalone output (excludes all dev dependencies and source)
+COPY --from=builder /app/apps/frontend/.next/standalone ./
+COPY --from=builder /app/apps/frontend/.next/static ./apps/frontend/.next/static
+COPY --from=builder /app/apps/frontend/public ./apps/frontend/public
+
+# Set ownership to non-root user
+RUN chown -R nextjs:nodejs /app
+
+USER nextjs
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD wget -qO- http://localhost:3000/api/health || exit 1
+
+CMD ["node", "apps/frontend/server.js"]

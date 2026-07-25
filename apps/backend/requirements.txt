@@ -1,0 +1,59 @@
+# =============================================================
+# Digital Product Marketplace — Backend Dependencies
+# FastAPI + SQLAlchemy + Alembic + Pydantic + Async I/O
+# =============================================================
+
+# ── Web Framework ─────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9        # Form data & file upload support
+
+# ── Data Validation & Settings ────────────────────────────────
+pydantic==2.8.2
+pydantic-settings==2.4.0       # Typed env var loading from .env
+
+# ── Database (Async PostgreSQL) ───────────────────────────────
+sqlalchemy[asyncio]==2.0.32    # Async ORM
+asyncpg>=0.30.0                # Async PostgreSQL driver
+alembic==1.13.2                # Database migrations
+
+# ── Caching & Queue ───────────────────────────────────────────
+redis[asyncio]==5.0.8          # Async Redis client
+hiredis>=3.1.0                 # High-performance Redis parser
+
+# ── Authentication & Security ─────────────────────────────────
+python-jose[cryptography]==3.3.0  # JWT encode/decode (RS256/HS256)
+passlib[bcrypt]==1.7.4            # Password hashing (bcrypt)
+cryptography==43.0.1              # Cryptographic utilities
+
+# ── HTTP Client (External API calls) ──────────────────────────
+httpx==0.27.2                  # Async HTTP client (Stripe, OAuth)
+
+# ── Logging ───────────────────────────────────────────────────
+loguru==0.7.2                  # Structured JSON logging
+
+# ── Middleware & Utilities ────────────────────────────────────
+starlette==0.38.4              # ASGI utilities (included with FastAPI)
+python-dotenv==1.0.1           # .env file loading
+
+# ── CORS & Request Parsing ────────────────────────────────────
+# CORS is handled natively by FastAPI's CORSMiddleware
+
+# ── Email ─────────────────────────────────────────────────────
+aiosmtplib==3.0.2              # Async SMTP email client
+
+# ── Storage (AWS S3 / Cloudflare R2) ─────────────────────────
+boto3==1.35.0                  # AWS SDK for S3 presigned URL generation
+aiobotocore==2.15.0            # Async boto3 wrapper
+
+# ── Background Tasks / Queue ──────────────────────────────────
+celery[redis]==5.4.0           # Async task queue (Phase 2+, setup here)
+
+# ── Observability ─────────────────────────────────────────────
+sentry-sdk[fastapi]==2.13.0   # Error tracking and performance monitoring
+opentelemetry-sdk==1.27.0     # OpenTelemetry tracing
+
+# =============================================================
+# Dev & Testing Dependencies
+# Install with: pip install -r requirements-dev.txt
+# =============================================================

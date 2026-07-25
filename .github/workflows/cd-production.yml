@@ -1,0 +1,152 @@
+# =============================================================
+# .github/workflows/cd-production.yml — Continuous Deployment
+# Runs on: push to `main` branch (after CI passes)
+# Builds Docker images, pushes to ECR, deploys to Kubernetes
+# =============================================================
+
+name: CD — Build, Push & Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Allow manual trigger
+
+concurrency:
+  group: cd-production
+  cancel-in-progress: false  # Never cancel in-flight production deployments
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  # ── Build & Push Docker Images ───────────────────────────────
+  build-and-push:
+    name: "Build & Push Docker Images to ECR"
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # For OIDC-based AWS authentication (no long-lived secrets)
+      contents: read
+
+    outputs:
+      frontend-image: ${{ steps.build-frontend.outputs.image }}
+      backend-image: ${{ steps.build-backend.outputs.image }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC — no long-lived keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # ── Frontend Image ─────────────────────────────────────
+      - name: Build & push Frontend image
+        id: build-frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infrastructure/docker/Dockerfile.frontend
+          target: runner
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/marketplace-frontend:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REGISTRY }}/marketplace-frontend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+
+      # ── Backend Image ──────────────────────────────────────
+      - name: Build & push Backend image
+        id: build-backend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infrastructure/docker/Dockerfile.backend
+          target: runner
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/marketplace-backend:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REGISTRY }}/marketplace-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── Deploy to Kubernetes ─────────────────────────────────────
+  deploy:
+    name: "Deploy to Production Kubernetes"
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment:
+      name: production
+      url: ${{ secrets.PRODUCTION_URL }}
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ env.AWS_REGION }} \
+            --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Run database migrations (Alembic)
+        run: |
+          kubectl run alembic-migrate \
+            --image=${{ env.ECR_REGISTRY }}/marketplace-backend:${{ env.IMAGE_TAG }} \
+            --restart=Never \
+            --rm \
+            --wait=true \
+            --env="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
+            -- alembic upgrade head
+
+      - name: Deploy Backend (rolling update — zero downtime)
+        run: |
+          kubectl set image deployment/marketplace-backend \
+            backend=${{ env.ECR_REGISTRY }}/marketplace-backend:${{ env.IMAGE_TAG }} \
+            --record
+          kubectl rollout status deployment/marketplace-backend --timeout=300s
+
+      - name: Deploy Frontend (rolling update — zero downtime)
+        run: |
+          kubectl set image deployment/marketplace-frontend \
+            frontend=${{ env.ECR_REGISTRY }}/marketplace-frontend:${{ env.IMAGE_TAG }} \
+            --record
+          kubectl rollout status deployment/marketplace-frontend --timeout=300s
+
+      - name: Verify production health
+        run: |
+          echo "Waiting for health checks..."
+          sleep 15
+          curl -f ${{ secrets.PRODUCTION_URL }}/api/v1/health/ready || \
+            (echo "❌ Production health check failed!" && exit 1)
+          echo "✅ Production deployment successful!"
+
+      - name: Notify deployment (Slack)
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "${{ job.status == 'success' && '✅' || '❌' }} Production deployment *${{ job.status }}*\nCommit: `${{ github.sha }}`\nAuthor: ${{ github.actor }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
