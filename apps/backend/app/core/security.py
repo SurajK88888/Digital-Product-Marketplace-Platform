@@ -10,7 +10,7 @@ and `hash_password` in any FastAPI auth module.
 
 from datetime import UTC, datetime, timedelta
 import secrets
-from typing import Any
+from typing import Any, cast
 import uuid
 
 from jose import JWTError, jwt
@@ -33,7 +33,7 @@ def hash_password(plain_password: str) -> str:
     Hash a plain-text password using bcrypt.
     The hash includes the salt — no separate salt storage needed.
     """
-    return pwd_context.hash(plain_password)
+    return cast(str, pwd_context.hash(plain_password))
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -41,7 +41,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Verify a plain-text password against a bcrypt hash.
     Uses constant-time comparison to prevent timing attacks.
     """
-    return pwd_context.verify(plain_password, hashed_password)
+    return cast(bool, pwd_context.verify(plain_password, hashed_password))
 
 
 def create_access_token(
@@ -76,7 +76,7 @@ def create_access_token(
     if additional_claims:
         payload.update(additional_claims)
 
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return cast(str, jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM))
 
 
 def create_refresh_token() -> str:
@@ -114,7 +114,7 @@ def decode_access_token(token: str) -> dict[str, Any]:
             code="TOKEN_TYPE_MISMATCH",
         )
 
-    return payload
+    return cast(dict[str, Any], payload)
 
 
 def generate_verification_token() -> str:

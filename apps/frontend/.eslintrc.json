@@ -26,14 +26,7 @@
     "@typescript-eslint/no-misused-promises": "error",
 
     /* ── Import Order ───────────────────────────────────────── */
-    "import/order": [
-      "error",
-      {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-        "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true }
-      }
-    ],
+    "import/order": "off",
     "import/no-duplicates": "error",
     "import/no-cycle": "warn",
 

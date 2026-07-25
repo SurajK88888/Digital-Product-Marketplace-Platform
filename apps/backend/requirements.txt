@@ -61,3 +61,4 @@ mypy==1.11.2                   # Static type checker
 pytest==8.3.2                  # Testing framework
 pytest-asyncio==0.23.8         # Async test runner for Pytest
 pytest-cov==5.0.0              # Coverage reporting for Pytest
+httpx==0.27.2                  # Async HTTP client for FastAPI testing
