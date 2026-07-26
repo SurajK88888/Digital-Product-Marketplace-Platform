@@ -87,7 +87,7 @@ jobs:
     needs: build-and-push
     environment:
       name: production
-      url: ${{ secrets.PRODUCTION_URL }}
+      url: ${{ vars.PRODUCTION_URL }}
     permissions:
       id-token: write
       contents: read
@@ -136,7 +136,7 @@ jobs:
         run: |
           echo "Waiting for health checks..."
           sleep 15
-          curl -f ${{ secrets.PRODUCTION_URL }}/api/v1/health/ready || \
+          curl -f ${{ vars.PRODUCTION_URL }}/api/v1/health/ready || \
             (echo "❌ Production health check failed!" && exit 1)
           echo "✅ Production deployment successful!"
 
