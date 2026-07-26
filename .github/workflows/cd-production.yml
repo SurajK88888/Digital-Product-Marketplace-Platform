@@ -7,9 +7,11 @@
 name: CD — Build, Push & Deploy to Production
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:  # Allow manual trigger
+  # NOTE: Uncomment the push trigger below once AWS infrastructure (ECR, EKS, IAM OIDC role)
+  # and all required GitHub Secrets are configured. Until then, run manually via workflow_dispatch.
+  # push:
+  #   branches: [main]
+  workflow_dispatch:  # Manual trigger — safe to run once AWS is ready
 
 concurrency:
   group: cd-production
